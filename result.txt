@@ -1,0 +1,8 @@
+citeseer
+best validation ACC 70.4+-5.61 time 1.056+-0.21820947796549767
+2 best validation ACC 65.35+-6.32 time 2.38+-0.43752875290019705
+4 best validation ACC 42.72+-5.01 time 4.134+-0.5625361796109497
+8 best validation ACC 26.55+-5.36 time 8.16+-0.22401539590918704
+cora
+best err 48.04+-1.68 best alpha_v -0.1 alpha_e 0.0 for dataset cora
+best ACC 51.96+-1.68 time 5.368+-0.0712800117197579

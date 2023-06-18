@@ -14,13 +14,14 @@ import utils
 import math
 from sklearn.decomposition import TruncatedSVD
 from collections import defaultdict
-import sys
+import sys,csv
 import time
 
 import pdb
 
 device = utils.device
 
+print("device", device)
 class HyperMod(nn.Module):
     
     def __init__(self, input_dim, vidx, eidx, nv, ne, v_weight, e_weight, args, is_last=False, use_edge_lin=False):
@@ -106,7 +107,7 @@ class HyperMod(nn.Module):
         #v = v*self.v_weight
         if self.is_last_mod:
             ev_edge = (ev*torch.exp(self.e_weight)/np.exp(2))[self.args.paper_author[:, 1]]
-            pdb.set_trace()
+            #pdb.set_trace()
             v2 = torch.zeros_like(v)
             v2.scatter_add_(src=ev_edge, index=vidx, dim=0)
             v2 = self.edge_lin(v2)
@@ -234,7 +235,12 @@ class Hypertrain:
         if args.verbose:
             print('TEST ERR ', 1-acc, ' ~~ eval loss ~~ ', loss)
         return 1-acc
-        
+
+def data_write_csv(filename,data):
+    with open(filename, "a", encoding="utf-8", newline='') as w:
+        writer = csv.writer(w)
+        writer.writerow(data)
+
 def train(args):
     '''
     args.vidx, args.eidx, args.nv, args.ne, args = s
@@ -394,7 +400,7 @@ def gen_data_cora(args, data_path='data/cora_author.pt', flip_edge_node=True, do
     for author_idx, wt_l in author2sum.items():
         e_reg_sum[author_idx] = sum(wt_l)
 
-    pdb.set_trace()
+    # pdb.set_trace()
     #this is used in denominator only
     e_reg_sum[e_reg_sum==0] = 1
     v_reg_sum[v_reg_sum==0] = 1
@@ -678,7 +684,7 @@ def select_params(data_path, args):
             test_err = train(args)
             time_ar[i] = time.time() - time0
             err_ar[i] = test_err
-            sys.stdout.write(' Validation err {}\t'.format(test_err))
+            sys.stdout.write('\n Validation err {}\t'.format(test_err))
         mean_err = err_ar.mean()
         err_std = err_ar.std()
         mean_err_l.append(mean_err)
@@ -698,6 +704,8 @@ def select_params(data_path, args):
     print('mean validation errs {} mean err std {}'.format(mean_err_l, mean_err_std_l))
     print('best err {}+-{} best alpha_v {} alpha_e {} for dataset {}'.format(np.round(best_err*100, 2), np.round(best_err_std*100, 2), best_alpha_v, best_alpha_e, args.dataset_name))
     print('best validation ACC {}+-{} time {}+-{}'.format(np.round((1-best_err)*100, 2), np.round(best_err_std*100, 2), best_time, best_time_std  ))
+    data_write_csv('hnhn_data.csv',
+                   [args.dataset_name, 1-best_err, best_err_std, best_err, args.n_layers])
     return best_alpha_v, best_alpha_e
 
     
@@ -729,6 +737,6 @@ if __name__ =='__main__':
         select_params(data_path, args)
 
     #if studying the effects of hyperparameters
-    study_normalization = False
+    study_normalization = False#True
     if study_normalization:
         compare_normalization(data_path, args)

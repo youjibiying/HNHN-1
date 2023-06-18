@@ -34,7 +34,7 @@ def parse_args():
     parser.add_argument("--exp_wt", dest='use_exp_wt', action='store_const', default=False, const=True, help='Fix seed for reproducibility and fair comparison.')
     parser.add_argument("--do_svd", action='store_const', default=False, const=True, help='use svd')
     parser.add_argument("--method", type=str, default='hypergcn', help='which baseline method')
-    parser.add_argument("--kfold", default=3, type=int, help='for k-fold cross validation')
+    parser.add_argument("--kfold", default=5, type=int, help='for k-fold cross validation')
     parser.add_argument("--predict_edge", action='store_const', default=False, const=True, help='whether to predict edges')
     parser.add_argument("--edge_linear", action='store_const', default=False, const=True, help='linerity')
     parser.add_argument("--alpha_e", default=0, type=float, help='alpha')

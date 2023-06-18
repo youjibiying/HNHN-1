@@ -14,10 +14,10 @@ import utils
 import math
 from collections import defaultdict
 import hypergraph
-#import hypergcn as hgcn
-import model.model as hgcn_model
-import config.config as hgcn_config
-import train as hgnn_train
+# import hypergcn as hgcn
+# import model.model as hgcn_model
+# import config.config as hgcn_config
+# import train as hgnn_train
 import time
 import sys
 
